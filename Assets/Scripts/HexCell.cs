@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 public class HexCell
 {
-    public readonly int Q; 
-    public readonly int R;    
+    public int Q { private set; get; } 
+    public int R { private set; get; }  
     public List<HexCell> Neighbors { get; private set; }
 
     public HexCell(int q, int r)

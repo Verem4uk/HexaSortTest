@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class HexGrid
 {
-    public readonly int Radius;
-    private readonly Dictionary<(int, int), HexCell> _cells;
+    private int Radius;
+    private Dictionary<(int, int), HexCell> Cells;
 
     private static readonly (int dq, int dr)[] _directions = new (int, int)[]
     {
@@ -15,7 +15,7 @@ public class HexGrid
     public HexGrid(int radius)
     {
         Radius = radius;
-        _cells = new Dictionary<(int, int), HexCell>();
+        Cells = new Dictionary<(int, int), HexCell>();
         GenerateHexShape();
         ConnectNeighbors();
     }
@@ -28,19 +28,19 @@ public class HexGrid
             int r2 = Mathf.Min(Radius, -q + Radius);
             for (int r = r1; r <= r2; r++)
             {
-                _cells[(q, r)] = new HexCell(q, r);
+                Cells[(q, r)] = new HexCell(q, r);
             }
         }
     }
 
     private void ConnectNeighbors()
     {
-        foreach (var cell in _cells.Values)
+        foreach (var cell in Cells.Values)
         {
             foreach (var (dq, dr) in _directions)
             {
                 var neighborKey = (cell.Q + dq, cell.R + dr);
-                if (_cells.TryGetValue(neighborKey, out var neighbor))
+                if (Cells.TryGetValue(neighborKey, out var neighbor))
                 {
                     cell.AddNeighbor(neighbor);
                 }
@@ -48,5 +48,5 @@ public class HexGrid
         }
     }
 
-    public IEnumerable<HexCell> GetAllCells() => _cells.Values;
+    public IEnumerable<HexCell> GetAllCells() => Cells.Values;
 }
