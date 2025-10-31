@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class HexStackSpawner : MonoBehaviour
 {    
@@ -37,11 +38,11 @@ public class HexStackSpawner : MonoBehaviour
         var stacks = generator.GenerateStacks();
 
         for (int i = 0; i < stacks.Count; i++)
-        {
-            Vector3 basePos;
-                       
-            basePos = stackPositions[i].position;
-            
+        {                     
+            var basePos = stackPositions[i].position;            
+            var view = stackPositions[i].AddComponent<HexStackView>();
+            view.Initialize(stacks[i]);
+                                    
             var stack = stacks[i];
             var hexons = stack.ToArray();
             System.Array.Reverse(hexons); 
@@ -50,14 +51,14 @@ public class HexStackSpawner : MonoBehaviour
             {
                 var hexon = hexons[j];
                 var obj = Instantiate(hexPrefab, basePos + Vector3.up * (j * hexHeight), Quaternion.identity, stackPositions[i]);
-
-                
-                var renderer = obj.GetComponentInChildren<Renderer>();
-                if (renderer != null)
-                    renderer.material.color = colorDatabase.GetColor(hexon.ColorType);
+                                
+                var renderer = obj.GetComponentInChildren<Renderer>();                
+                renderer.material.color = colorDatabase.GetColor(hexon.ColorType);
 
                 spawnedObjects.Add(obj);
             }
+
+
         }
     }
 

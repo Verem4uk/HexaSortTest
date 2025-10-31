@@ -34,6 +34,11 @@ public class HexGridGenerator : MonoBehaviour
             Vector3 position = AxialToWorld(cell.Q, cell.R);
             GameObject hexGO = Instantiate(hexPrefab, position, Quaternion.identity, transform);
             hexGO.name = $"Hex_{cell.Q}_{cell.R}";
+            var box = hexGO.AddComponent<BoxCollider>();
+            box.size = new Vector3(1.5f, 0.5f, 1.5f);
+            box.center = new Vector3(0, 0.2f, 0);
+            hexGO.AddComponent<HexCellView>();
+            
 
             _cellObjects[cell] = hexGO;
         }
