@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ public class HexGridGenerator : MonoBehaviour
     [SerializeField]
     private float hexSize = 1f;
     [SerializeField]
-    private GameObject hexPrefab;
+    private HexCellView hexPrefab;
 
     private HexGrid _grid;
     private readonly Dictionary<HexCell, HexCellView> _cellObjects = new();
@@ -33,15 +32,9 @@ public class HexGridGenerator : MonoBehaviour
         foreach (var cell in _grid.GetAllCells())
         {
             Vector3 position = AxialToWorld(cell.Q, cell.R);
-            GameObject hexGO = Instantiate(hexPrefab, position, Quaternion.identity, transform);
-            hexGO.name = $"Hex_{cell.Q}_{cell.R}";
-            var box = hexGO.AddComponent<BoxCollider>();
-            box.size = new Vector3(1.5f, 0.5f, 1.5f);
-            box.center = new Vector3(0, 0.2f, 0);
-
-            var view = hexGO.AddComponent<HexCellView>();
-            view.Initialize(cell);
-            _cellObjects[cell] = view;
+            var hexagonePlate = Instantiate(hexPrefab, position, Quaternion.identity, transform);
+            hexagonePlate.Initialize(cell);
+            _cellObjects[cell] = hexagonePlate;
         }
     }
 
