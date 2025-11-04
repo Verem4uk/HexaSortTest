@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ public class HexGridGenerator : MonoBehaviour
     private GameObject hexPrefab;
 
     private HexGrid _grid;
-    private readonly Dictionary<HexCell, GameObject> _cellObjects = new();
+    private readonly Dictionary<HexCell, HexCellView> _cellObjects = new();
 
     void Start()
     {
@@ -37,10 +38,10 @@ public class HexGridGenerator : MonoBehaviour
             var box = hexGO.AddComponent<BoxCollider>();
             box.size = new Vector3(1.5f, 0.5f, 1.5f);
             box.center = new Vector3(0, 0.2f, 0);
-            hexGO.AddComponent<HexCellView>();
-            
 
-            _cellObjects[cell] = hexGO;
+            var view = hexGO.AddComponent<HexCellView>();
+            view.Initialize(cell);
+            _cellObjects[cell] = view;
         }
     }
 

@@ -9,6 +9,9 @@ public class HexStackGenerator
     private float TwoColorChance;
     private Random Random = new Random();
 
+    private List<HexonStack> SpawnedStacks;
+    public Action AllStacksWereUsed;
+    
     public HexStackGenerator(int stacksCount, int minStackHeight, int maxStackHeight, float twoColorChance)
     {
         StacksCount = stacksCount;
@@ -17,14 +20,14 @@ public class HexStackGenerator
         TwoColorChance = twoColorChance;
     }
 
-    public List<Stack<Hexon>> GenerateStacks()
+    public List<HexonStack> GenerateStacks()
     {
         var allTypes = Enum.GetValues(typeof(HexColorType));
-        var stacks = new List<Stack<Hexon>>();
+        SpawnedStacks = new List<HexonStack>();
 
         for (int i = 0; i < StacksCount; i++)
         {
-            var stack = new Stack<Hexon>();
+            var stack = new HexonStack();
             int stackHeight = Random.Next(MinStackHeight, MaxStackHeight + 1);
             bool useTwoColors = Random.NextDouble() < TwoColorChance && stackHeight > 1;
 
@@ -60,9 +63,20 @@ public class HexStackGenerator
                 }                    
             }
 
-            stacks.Add(stack);
+            SpawnedStacks.Add(stack);
+            stack.Placed += OnStackUsed;
         }
 
-        return stacks;
+        return SpawnedStacks;
+    }
+
+    private void OnStackUsed(HexonStack stack)
+    {
+        stack.Placed -= OnStackUsed;
+        SpawnedStacks.Remove(stack);
+        if (SpawnedStacks.Count == 0)
+        {
+            AllStacksWereUsed?.Invoke();
+        }
     }
 }

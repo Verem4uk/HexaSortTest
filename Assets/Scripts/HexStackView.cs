@@ -1,11 +1,12 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
 public class HexStackView : MonoBehaviour
 {
-    private Stack<Hexon> logicStack;    
+    private HexonStack logicStack;    
     private bool _isDragging;
     private Vector3 _offset;
     private Vector3 _startPosition;
@@ -16,7 +17,7 @@ public class HexStackView : MonoBehaviour
         _mainCamera = Camera.main;
     }
 
-    public void Initialize(Stack<Hexon> stack)
+    public void Initialize(HexonStack stack)
     {
         logicStack = stack;
     }
@@ -47,9 +48,10 @@ public class HexStackView : MonoBehaviour
                 collider.enabled = false;
 
                 var targetCell = GetHoveredCell(pointerPos);
-                if (targetCell != null)
-                {
+                if (targetCell != null && targetCell.PlaceStack(this))
+                {                    
                     targetCell.PlaceStack(this);
+                    logicStack.Place(targetCell.Cell);
                 }                    
                 else
                 {

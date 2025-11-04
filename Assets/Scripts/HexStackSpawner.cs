@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using System;
 
 public class HexStackSpawner : MonoBehaviour
 {    
@@ -21,56 +22,47 @@ public class HexStackSpawner : MonoBehaviour
     private float hexHeight = 1f;
 
     [SerializeField]
-    private List<Transform> stackPositions = new();
+    private HexStackView StackHolder;
 
-    private List<GameObject> spawnedObjects = new();
+    [SerializeField]
+    private List<Transform> stackPositions;
+
+    private HexStackGenerator Generator;
+
 
     private void Start()
     {
-        GenerateAndSpawn();
+        Generator = new HexStackGenerator(stacksCount, minStackHeight, maxStackHeight, twoColorChance);
+        Generator.AllStacksWereUsed += Spawn;
+        Spawn();
     }
         
-    public void GenerateAndSpawn()
-    {
-        ClearOld();
-
-        var generator = new HexStackGenerator(stacksCount, minStackHeight, maxStackHeight, twoColorChance);
-        var stacks = generator.GenerateStacks();
+    public void Spawn()    
+    {   
+        var stacks = Generator.GenerateStacks();
 
         for (int i = 0; i < stacks.Count; i++)
         {                     
             var basePos = stackPositions[i].position;            
-            var view = stackPositions[i].AddComponent<HexStackView>();
-            view.Initialize(stacks[i]);
-                                    
+            var stackHolder = Instantiate(StackHolder, basePos, Quaternion.identity, stackPositions[i]);
+            stackHolder.Initialize(stacks[i]);
+                                                
             var stack = stacks[i];
-            var hexons = stack.ToArray();
-            System.Array.Reverse(hexons); 
+            var hexons = stack.PeekAll();
 
             for (int j = 0; j < hexons.Length; j++)
             {
                 var hexon = hexons[j];
-                var obj = Instantiate(hexPrefab, basePos + Vector3.up * (j * hexHeight), Quaternion.identity, stackPositions[i]);
+                var stackView = Instantiate(hexPrefab,stackHolder.transform.position + Vector3.up * (j * hexHeight), Quaternion.identity, stackHolder.transform);
                                 
-                var renderer = obj.GetComponentInChildren<Renderer>();                
+                var renderer = stackView.GetComponentInChildren<Renderer>();                
                 renderer.material.color = colorDatabase.GetColor(hexon.ColorType);
-
-                spawnedObjects.Add(obj);
             }
-
-
-        }
+        }        
     }
 
-    private void ClearOld()
+    private void OnDestroy()
     {
-        foreach (var obj in spawnedObjects)
-        {
-            if (obj != null)
-            {
-                Destroy(obj);
-            }                
-        }
-        spawnedObjects.Clear();
+        Generator.AllStacksWereUsed -= Spawn;
     }
 }

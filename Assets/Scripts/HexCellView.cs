@@ -7,16 +7,23 @@ public class HexCellView : MonoBehaviour
 {    
     public bool IsOccupied => currentStack != null;
     private HexStackView currentStack;
+    public HexCell Cell { private set; get; }
+
+    public void Initialize(HexCell cell)
+    {
+        Cell = cell;
+    }
    
-    public void PlaceStack(HexStackView stack)
+    public bool PlaceStack(HexStackView stack)
     {
         if (IsOccupied)
         {            
-            return;
+            return false;
         }            
 
-        currentStack = stack;        
+        currentStack = stack;            
         StartCoroutine(SmoothMove(stack.transform, transform.position + Vector3.up * 0.5f, 0.15f));
+        return true;
     }
 
     private IEnumerator SmoothMove(Transform obj, Vector3 target, float duration)
