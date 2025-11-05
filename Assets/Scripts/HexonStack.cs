@@ -5,9 +5,10 @@ using System.Collections.Generic;
 public class HexonStack
 {
     private Stack<Hexon> Stack;
-    private Cell Cell;
+    public Cell Cell { private set; get; }
 
-    public Action<HexonStack,Cell> Placed;
+    public Action<HexonStack, Cell> Placed;
+    public Action<HexonStack> Depleted;
 
     public HexonStack()
     {
@@ -27,12 +28,25 @@ public class HexonStack
         return hexons;
     }
 
-    public void Push(Hexon hexon) => Stack.Push(hexon);
-
-    public Hexon Pop()
+    public void Push(Hexon hexon)
     {
-        return Stack.Pop();
+        Stack.Push(hexon);
+        hexon.ChangeStack(this);
     }
 
+    public Hexon Pop() => Stack.Pop();
     public Hexon Peek() => Stack.Peek();
+
+    public bool CheckForEmpty()
+    {
+        if(Stack.Count == 0)
+        {
+            Cell.CleanUp();
+            Cell = null;
+            Depleted?.Invoke(this);
+            Stack = null;
+            return true;
+        }
+        return false;
+    }
 }

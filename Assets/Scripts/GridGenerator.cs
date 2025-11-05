@@ -12,7 +12,7 @@ public class GridGenerator : MonoBehaviour
     private CellView hexPrefab;
 
     private Grid Grid;
-    private readonly Dictionary<Cell, CellView> CellObjects = new();
+    private Dictionary<Cell, CellView> CellObjects = new();
     
     public void Initialize(out Grid grid)
     {        

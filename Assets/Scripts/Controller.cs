@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
@@ -9,6 +10,7 @@ public class Controller : MonoBehaviour
     private HexonStackGeneratorView StackGenerator;
 
     private Model Model;
+    private bool InputIsLocked;
 
     private void Start()
     {
@@ -20,15 +22,35 @@ public class Controller : MonoBehaviour
     }
 
     public bool Place(HexonStack stack, Cell cell)
-    {
-        Debug.Log("Try place");
-        if (cell.IsOccupied)
+    {        
+        if (InputIsLocked || cell.IsOccupied)
         {
             return false;
         }
+
         Model.Place(stack, cell);
+        NextMove();
         return true;
     }
 
-    public Vector3 GetPositionForMove(Cell cell) => GridGenerator.GetPositionByCell(cell);    
+    public void NextMove()
+    {
+        InputIsLocked = true;
+        StartCoroutine(DelayCheck());
+    }
+
+    private IEnumerator DelayCheck()
+    {
+        float delay;
+
+        while ((delay = Model.CheckMoves()) > 0f)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+
+        InputIsLocked = false;
+    }
+
+    public Vector3 GetPositionForMove(Cell cell) => GridGenerator.GetPositionByCell(cell);
+    public Vector3 GetPositionForMove(HexonStack stack) => StackGenerator.GetPositionByStack(stack);
 }

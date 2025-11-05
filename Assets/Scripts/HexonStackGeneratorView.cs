@@ -16,7 +16,7 @@ public class HexonStackGeneratorView : MonoBehaviour
     [SerializeField]
     private ColorsDatabase colorDatabase;
     [SerializeField]
-    private GameObject hexPrefab;
+    private HexonView HexonView;
     [SerializeField]
     private float hexHeight = 1f;
 
@@ -28,6 +28,8 @@ public class HexonStackGeneratorView : MonoBehaviour
 
     private HexonStackGenerator Generator;
     private Controller Controller;
+
+    private Dictionary<HexonStack, HexonStackView> Stacks = new();
 
     public void Initialize(Controller controller)
     {
@@ -45,20 +47,34 @@ public class HexonStackGeneratorView : MonoBehaviour
         {                     
             var basePos = StackPositions[i].position;            
             var stackHolder = Instantiate(StackHolder, basePos, Quaternion.identity, StackPositions[i]);
-            stackHolder.Initialize(stacks[i], Controller);
-                                                
             var stack = stacks[i];
+            stackHolder.Initialize(stack, Controller);
+            Stacks.Add(stack, stackHolder);
+            stack.Depleted += OnStackDepleted;
             var hexons = stack.PeekAll();
 
             for (int j = 0; j < hexons.Length; j++)
             {
                 var hexon = hexons[j];
-                var stackView = Instantiate(hexPrefab,stackHolder.transform.position + Vector3.up * (j * hexHeight), Quaternion.identity, stackHolder.transform);
-                                
-                var renderer = stackView.GetComponentInChildren<Renderer>();                
+                var hexonView = Instantiate(HexonView,stackHolder.transform.position + Vector3.up * (j * hexHeight), Quaternion.identity, stackHolder.transform);                
+                var renderer = hexonView.GetComponentInChildren<Renderer>();                
                 renderer.material.color = colorDatabase.GetColor(hexon.ColorType);
+                hexonView.Initialize(hexon, Controller);
             }
         }        
+    }
+
+    public Vector3 GetPositionByStack(HexonStack stack)
+    {
+        var view = Stacks[stack];
+        var hexonsCount = stack.PeekAll().Length;
+        var cellPosition = Controller.GetPositionForMove(stack.Cell);
+        return cellPosition + Vector3.up * (hexonsCount * hexHeight);
+    }
+
+    public void OnStackDepleted(HexonStack hexonStack)
+    {
+        Stacks.Remove(hexonStack);
     }
 
     private void OnDestroy()

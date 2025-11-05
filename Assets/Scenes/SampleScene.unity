@@ -446,7 +446,7 @@ MonoBehaviour:
   maxStackHeight: 5
   twoColorChance: 0.5
   colorDatabase: {fileID: 11400000, guid: 725083fcd2ce75548af18146c088e965, type: 2}
-  hexPrefab: {fileID: 346529824043651213, guid: ac186f39cf19ae2469c82f6ba0f0aefa, type: 3}
+  HexonView: {fileID: 5764102552404662096, guid: ac186f39cf19ae2469c82f6ba0f0aefa, type: 3}
   hexHeight: 0.3
   StackHolder: {fileID: 1313696459282910162, guid: e1d01322dee40a34ebe8473110780f82, type: 3}
   StackPositions:

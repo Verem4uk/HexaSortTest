@@ -7,8 +7,7 @@ public class Cell
     public int R { private set; get; }  
     public List<Cell> Neighbors { get; private set; }
     public bool IsOccupied => Stack != null;
-
-    private HexonStack Stack;
+    public HexonStack Stack { get; private set; }
 
     public Cell(int q, int r)
     {
@@ -20,6 +19,11 @@ public class Cell
     public void PlaceStack(HexonStack stack)
     {
         Stack = stack;        
+    }
+
+    public void CleanUp()
+    {
+        Stack = null;
     }
 
     public void AddNeighbor(Cell cell)
