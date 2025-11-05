@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HexGrid
+public class Grid
 {
     private int Radius;
-    private Dictionary<(int, int), HexCell> Cells;
+    private Dictionary<(int, int), Cell> Cells;
 
     private static readonly (int dq, int dr)[] _directions = new (int, int)[]
     {
@@ -12,15 +12,15 @@ public class HexGrid
         (-1, 0), (-1, 1), (0, 1)
     };
 
-    public HexGrid(int radius)
+    public Grid(int radius)
     {
         Radius = radius;
-        Cells = new Dictionary<(int, int), HexCell>();
-        GenerateHexShape();
+        Cells = new Dictionary<(int, int), Cell>();
+        GenerateHexonShape();
         ConnectNeighbors();
     }
 
-    private void GenerateHexShape()
+    private void GenerateHexonShape()
     {
         for (int q = -Radius; q <= Radius; q++)
         {
@@ -28,7 +28,7 @@ public class HexGrid
             int r2 = Mathf.Min(Radius, -q + Radius);
             for (int r = r1; r <= r2; r++)
             {
-                Cells[(q, r)] = new HexCell(q, r);
+                Cells[(q, r)] = new Cell(q, r);
             }
         }
     }
@@ -48,5 +48,5 @@ public class HexGrid
         }
     }
 
-    public IEnumerable<HexCell> GetAllCells() => Cells.Values;
+    public IEnumerable<Cell> GetAllCells() => Cells.Values;
 }

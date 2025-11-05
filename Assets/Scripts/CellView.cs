@@ -3,25 +3,22 @@ using System.Collections;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Collider))]
-public class HexCellView : MonoBehaviour
-{    
-    public bool IsOccupied => currentStack != null;
-    private HexStackView currentStack;
-    public HexCell Cell { private set; get; }
+public class CellView : MonoBehaviour
+{        
+    public Cell Cell { private set; get; }
 
-    public void Initialize(HexCell cell)
+    public void Initialize(Cell cell)
     {
         Cell = cell;
     }
    
-    public bool PlaceStack(HexStackView stack)
+    public bool PlaceStack(HexonStackView stack)
     {
-        if (IsOccupied)
+        if (Cell.IsOccupied)
         {            
             return false;
         }            
-
-        currentStack = stack;            
+                    
         StartCoroutine(SmoothMove(stack.transform, transform.position + Vector3.up * 0.5f, 0.15f));
         return true;
     }
@@ -52,7 +49,7 @@ public class HexCellView : MonoBehaviour
         return Vector2.zero;        
     }
 
-    public static bool IsPointerOverThisCell(HexCellView cell)
+    public static bool IsPointerOverThisCell(CellView cell)
     {        
         var ray = Camera.main.ScreenPointToRay(GetPointerScreenPosition());
         if (Physics.Raycast(ray, out var hit))

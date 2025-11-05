@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using System;
 
-public class HexStackSpawner : MonoBehaviour
+public class HexonStackGeneratorView : MonoBehaviour
 {    
     [SerializeField, Range(1, 10)] 
     private int stacksCount = 3;
@@ -15,14 +14,14 @@ public class HexStackSpawner : MonoBehaviour
     private float twoColorChance = 0.5f;
 
     [SerializeField]
-    private HexColorDatabase colorDatabase;
+    private ColorsDatabase colorDatabase;
     [SerializeField]
     private GameObject hexPrefab;
     [SerializeField]
     private float hexHeight = 1f;
 
     [SerializeField]
-    private HexStackView StackHolder;
+    private HexonStackView StackHolder;
 
     [SerializeField]
     private List<Transform> stackPositions;

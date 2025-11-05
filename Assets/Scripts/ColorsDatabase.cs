@@ -2,8 +2,8 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "HexColorDatabase", menuName = "HexGame/HexColorDatabase")]
-public class HexColorDatabase : ScriptableObject
+[CreateAssetMenu(fileName = "ColorsDatabase", menuName = "HexonGame/ColorsDatabase")]
+public class ColorsDatabase : ScriptableObject
 {
     [Serializable]
     public class HexColorEntry

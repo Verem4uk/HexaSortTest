@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class HexonStack
 {
     private Stack<Hexon> Stack;
-    private HexCell Cell;
+    private Cell Cell;
 
     public Action<HexonStack> Placed;
 
@@ -14,7 +14,7 @@ public class HexonStack
         Stack = new Stack<Hexon>();
     }
 
-    public void Place(HexCell cell)
+    public void Place(Cell cell)
     {
         Cell = cell;
         Placed?.Invoke(this);
@@ -29,7 +29,10 @@ public class HexonStack
 
     public void Push(Hexon hexon) => Stack.Push(hexon);
 
-    public Hexon Pop() => Stack.Pop();
+    public Hexon Pop()
+    {
+        return Stack.Pop();
+    }
 
     public Hexon Peek() => Stack.Peek();
 }

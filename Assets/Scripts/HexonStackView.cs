@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Collider))]
-public class HexStackView : MonoBehaviour
+public class HexonStackView : MonoBehaviour
 {
     private HexonStack logicStack;    
     private bool _isDragging;
@@ -118,16 +116,14 @@ public class HexStackView : MonoBehaviour
         return Physics.Raycast(ray, out hit);
     }
 
-    private HexCellView GetHoveredCell(Vector2 screenPos)
+    private CellView GetHoveredCell(Vector2 screenPos)
     {        
         var ray = _mainCamera.ScreenPointToRay(screenPos);
         if (Physics.Raycast(ray, out var hit))
-        {
-            Debug.Log("Try get hovered Cell success"+hit.collider.gameObject.name);
-            return hit.collider.GetComponent<HexCellView>();
-        }
-           
-        Debug.Log("Try get hovered Cell fail");
+        {            
+            return hit.collider.GetComponent<CellView>();
+        }           
+        
         return null;
     }
 }

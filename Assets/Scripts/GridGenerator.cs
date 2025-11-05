@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HexGridGenerator : MonoBehaviour
+public class GridGenerator : MonoBehaviour
 {
     [Header("Grid Settings")]
     [SerializeField]
@@ -9,10 +9,10 @@ public class HexGridGenerator : MonoBehaviour
     [SerializeField]
     private float hexSize = 1f;
     [SerializeField]
-    private HexCellView hexPrefab;
+    private CellView hexPrefab;
 
-    private HexGrid _grid;
-    private readonly Dictionary<HexCell, HexCellView> _cellObjects = new();
+    private Grid _grid;
+    private readonly Dictionary<Cell, CellView> _cellObjects = new();
 
     void Start()
     {
@@ -22,7 +22,7 @@ public class HexGridGenerator : MonoBehaviour
             return;
         }
 
-        _grid = new HexGrid(radius);
+        _grid = new Grid(radius);
         GenerateVisualGrid();
         CenterGrid();
     }

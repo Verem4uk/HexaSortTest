@@ -1,19 +1,22 @@
 using System.Collections.Generic;
 
-public class HexCell
+public class Cell
 {
     public int Q { private set; get; } 
     public int R { private set; get; }  
-    public List<HexCell> Neighbors { get; private set; }
+    public List<Cell> Neighbors { get; private set; }
+    public bool IsOccupied => Stack != null;
 
-    public HexCell(int q, int r)
+    private HexonStack Stack;
+
+    public Cell(int q, int r)
     {
         Q = q;
         R = r;        
-        Neighbors = new List<HexCell>();
+        Neighbors = new List<Cell>();
     }
 
-    public void AddNeighbor(HexCell cell)
+    public void AddNeighbor(Cell cell)
     {
         if (cell != null && !Neighbors.Contains(cell))
         {
