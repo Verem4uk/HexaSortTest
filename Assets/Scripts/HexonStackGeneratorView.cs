@@ -24,14 +24,15 @@ public class HexonStackGeneratorView : MonoBehaviour
     private HexonStackView StackHolder;
 
     [SerializeField]
-    private List<Transform> stackPositions;
+    private List<Transform> StackPositions;
 
-    private HexStackGenerator Generator;
+    private HexonStackGenerator Generator;
+    private Controller Controller;
 
-
-    private void Start()
+    public void Initialize(Controller controller)
     {
-        Generator = new HexStackGenerator(stacksCount, minStackHeight, maxStackHeight, twoColorChance);
+        Controller = controller;
+        Generator = new HexonStackGenerator(stacksCount, minStackHeight, maxStackHeight, twoColorChance);
         Generator.AllStacksWereUsed += Spawn;
         Spawn();
     }
@@ -42,9 +43,9 @@ public class HexonStackGeneratorView : MonoBehaviour
 
         for (int i = 0; i < stacks.Count; i++)
         {                     
-            var basePos = stackPositions[i].position;            
-            var stackHolder = Instantiate(StackHolder, basePos, Quaternion.identity, stackPositions[i]);
-            stackHolder.Initialize(stacks[i]);
+            var basePos = StackPositions[i].position;            
+            var stackHolder = Instantiate(StackHolder, basePos, Quaternion.identity, StackPositions[i]);
+            stackHolder.Initialize(stacks[i], Controller);
                                                 
             var stack = stacks[i];
             var hexons = stack.PeekAll();

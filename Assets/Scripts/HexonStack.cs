@@ -7,7 +7,7 @@ public class HexonStack
     private Stack<Hexon> Stack;
     private Cell Cell;
 
-    public Action<HexonStack> Placed;
+    public Action<HexonStack,Cell> Placed;
 
     public HexonStack()
     {
@@ -17,7 +17,7 @@ public class HexonStack
     public void Place(Cell cell)
     {
         Cell = cell;
-        Placed?.Invoke(this);
+        Placed?.Invoke(this, cell);
     }
 
     public Hexon[] PeekAll()

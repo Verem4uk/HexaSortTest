@@ -386,10 +386,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 622351953}
+  - component: {fileID: 622351955}
   - component: {fileID: 622351952}
   - component: {fileID: 622351954}
   m_Layer: 0
-  m_Name: HexonGenerator
+  m_Name: Controllers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -448,10 +449,24 @@ MonoBehaviour:
   hexPrefab: {fileID: 346529824043651213, guid: ac186f39cf19ae2469c82f6ba0f0aefa, type: 3}
   hexHeight: 0.3
   StackHolder: {fileID: 1313696459282910162, guid: e1d01322dee40a34ebe8473110780f82, type: 3}
-  stackPositions:
+  StackPositions:
   - {fileID: 2085675610}
   - {fileID: 2088462947}
   - {fileID: 781257937}
+--- !u!114 &622351955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622351951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 726e4631f9d8d44459557b095dc20fb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GridGenerator: {fileID: 622351952}
+  StackGenerator: {fileID: 622351954}
 --- !u!1 &700933691
 GameObject:
   m_ObjectHideFlags: 0

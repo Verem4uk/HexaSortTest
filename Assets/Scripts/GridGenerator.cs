@@ -11,30 +11,31 @@ public class GridGenerator : MonoBehaviour
     [SerializeField]
     private CellView hexPrefab;
 
-    private Grid _grid;
-    private readonly Dictionary<Cell, CellView> _cellObjects = new();
-
-    void Start()
-    {
-        if (hexPrefab == null)
-        {
-            Debug.LogError("Hex prefab is not assigned!");
-            return;
-        }
-
-        _grid = new Grid(radius);
+    private Grid Grid;
+    private readonly Dictionary<Cell, CellView> CellObjects = new();
+    
+    public void Initialize(out Grid grid)
+    {        
+        Grid = new Grid(radius);
+        grid = Grid;
         GenerateVisualGrid();
         CenterGrid();
     }
 
+    public Vector3 GetPositionByCell(Cell cell)
+    {
+        var view = CellObjects[cell];
+        return view.gameObject.transform.position;
+    }
+
     private void GenerateVisualGrid()
     {
-        foreach (var cell in _grid.GetAllCells())
+        foreach (var cell in Grid.GetAllCells())
         {
             Vector3 position = AxialToWorld(cell.Q, cell.R);
             var hexagonePlate = Instantiate(hexPrefab, position, Quaternion.identity, transform);
             hexagonePlate.Initialize(cell);
-            _cellObjects[cell] = hexagonePlate;
+            CellObjects[cell] = hexagonePlate;
         }
     }
 
@@ -50,7 +51,7 @@ public class GridGenerator : MonoBehaviour
         Vector3 avg = Vector3.zero;
         int count = 0;
 
-        foreach (var cell in _cellObjects.Values)
+        foreach (var cell in CellObjects.Values)
         {
             avg += cell.transform.position;
             count++;
@@ -58,7 +59,7 @@ public class GridGenerator : MonoBehaviour
 
         avg /= count;
 
-        foreach (var cell in _cellObjects.Values)
+        foreach (var cell in CellObjects.Values)
         {
             cell.transform.position -= avg;
         }            

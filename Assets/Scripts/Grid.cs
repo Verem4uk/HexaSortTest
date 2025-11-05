@@ -6,7 +6,7 @@ public class Grid
     private int Radius;
     private Dictionary<(int, int), Cell> Cells;
 
-    private static readonly (int dq, int dr)[] _directions = new (int, int)[]
+    private static readonly (int dq, int dr)[] Directions = new (int, int)[]
     {
         (1, 0), (1, -1), (0, -1),
         (-1, 0), (-1, 1), (0, 1)
@@ -37,7 +37,7 @@ public class Grid
     {
         foreach (var cell in Cells.Values)
         {
-            foreach (var (dq, dr) in _directions)
+            foreach (var (dq, dr) in Directions)
             {
                 var neighborKey = (cell.Q + dq, cell.R + dr);
                 if (Cells.TryGetValue(neighborKey, out var neighbor))

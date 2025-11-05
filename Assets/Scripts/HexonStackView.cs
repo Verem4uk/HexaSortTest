@@ -1,23 +1,47 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Collider))]
 public class HexonStackView : MonoBehaviour
 {
-    private HexonStack logicStack;    
+    private HexonStack Stack;    
     private bool _isDragging;
     private Vector3 _offset;
     private Vector3 _startPosition;
     private Camera _mainCamera;
+
+    private Controller Controller;
 
     private void Start()
     {
         _mainCamera = Camera.main;
     }
 
-    public void Initialize(HexonStack stack)
+    public void Initialize(HexonStack stack, Controller controller)
     {
-        logicStack = stack;
+        Stack = stack;
+        stack.Placed += OnPlaced;
+        Controller = controller;
+    }
+
+    public void OnPlaced(HexonStack hexon, Cell cell)
+    {
+        var newPosition = Controller.GetPositionForMove(cell);
+        Debug.Log("Move");
+        StartCoroutine(SmoothMove(transform, newPosition + Vector3.up * 0.5f, 0.15f));        
+    }
+
+    private IEnumerator SmoothMove(Transform obj, Vector3 target, float duration)
+    {
+        Vector3 start = obj.position;
+        float t = 0;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            obj.position = Vector3.Lerp(start, target, t);
+            yield return null;
+        }
     }
 
     private void Update()
@@ -46,16 +70,12 @@ public class HexonStackView : MonoBehaviour
                 collider.enabled = false;
 
                 var targetCell = GetHoveredCell(pointerPos);
-                if (targetCell != null && targetCell.PlaceStack(this))
-                {                    
-                    targetCell.PlaceStack(this);
-                    logicStack.Place(targetCell.Cell);
-                }                    
-                else
+                if (targetCell == null || !Controller.Place(Stack, targetCell.Cell))
                 {
                     collider.enabled = true;
                     transform.position = _startPosition;
-                }                   
+                }                 
+                                 
             }
         }
     }
@@ -125,5 +145,10 @@ public class HexonStackView : MonoBehaviour
         }           
         
         return null;
+    }
+
+    private void OnDestroy()
+    {
+        Stack.Placed -= OnPlaced;
     }
 }

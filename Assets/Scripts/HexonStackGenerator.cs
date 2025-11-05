@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
-
-public class HexStackGenerator
+using System.Diagnostics;
+using UnityEngine;
+public class HexonStackGenerator
 {
     private int StacksCount;
     private int MinStackHeight;
     private int MaxStackHeight;
     private float TwoColorChance;
-    private Random Random = new Random();
+    private System.Random Random = new System.Random();
 
     private List<HexonStack> SpawnedStacks;
     public Action AllStacksWereUsed;
     
-    public HexStackGenerator(int stacksCount, int minStackHeight, int maxStackHeight, float twoColorChance)
+    public HexonStackGenerator(int stacksCount, int minStackHeight, int maxStackHeight, float twoColorChance)
     {
         StacksCount = stacksCount;
         MinStackHeight = minStackHeight;
@@ -70,12 +71,14 @@ public class HexStackGenerator
         return SpawnedStacks;
     }
 
-    private void OnStackUsed(HexonStack stack)
+    private void OnStackUsed(HexonStack stack, Cell cell)
     {
         stack.Placed -= OnStackUsed;
         SpawnedStacks.Remove(stack);
+        UnityEngine.Debug.Log("On Stack Used");
         if (SpawnedStacks.Count == 0)
         {
+            UnityEngine.Debug.Log("AllStacksWereUsed");
             AllStacksWereUsed?.Invoke();
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public class Cell
@@ -14,6 +15,11 @@ public class Cell
         Q = q;
         R = r;        
         Neighbors = new List<Cell>();
+    }
+
+    public void PlaceStack(HexonStack stack)
+    {
+        Stack = stack;        
     }
 
     public void AddNeighbor(Cell cell)
