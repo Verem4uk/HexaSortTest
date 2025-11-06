@@ -28,7 +28,7 @@ public class HexonStackView : MonoBehaviour
     public void OnPlaced(HexonStack hexon, Cell cell)
     {
         var newPosition = Controller.GetPositionForMove(cell);
-        Debug.Log("Move");
+        Stack.Placed -= OnPlaced;
         StartCoroutine(SmoothMove(transform, newPosition + Vector3.up * 0.5f, 0.15f));        
     }
 
@@ -145,10 +145,5 @@ public class HexonStackView : MonoBehaviour
         }           
         
         return null;
-    }
-
-    private void OnDestroy()
-    {
-        Stack.Placed -= OnPlaced;
     }
 }

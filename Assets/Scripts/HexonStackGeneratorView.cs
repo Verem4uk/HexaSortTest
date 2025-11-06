@@ -1,6 +1,7 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class HexonStackGeneratorView : MonoBehaviour
 {    
@@ -73,9 +74,24 @@ public class HexonStackGeneratorView : MonoBehaviour
     }
 
     public void OnStackDepleted(HexonStack hexonStack)
-    {
+    {  
         Stacks.Remove(hexonStack);
+        //var view = Stacks[hexonStack];
+        //Destroy(view.gameObject);
     }
+
+    public void CleanUpStacks()
+    {        
+        var stacksCopy = Stacks.Keys.ToList();
+        
+        foreach (var stack in stacksCopy)
+        {
+            stack.Delete();
+        }
+
+        Stacks.Clear();
+    }
+
 
     private void OnDestroy()
     {

@@ -15,13 +15,12 @@ public class GridGenerator : MonoBehaviour
     private Grid Grid;
     private Dictionary<Cell, CellView> CellObjects = new();
     
-    public void Initialize(out Grid grid)
+    public void Initialize()
     {        
-        Grid = new Grid(radius);
-        grid = Grid;
+        Grid = new Grid(radius);        
         GenerateVisualGrid();
         CenterGrid();
-    }
+    }   
 
     public Vector3 GetPositionByCell(Cell cell)
     {
@@ -29,13 +28,12 @@ public class GridGenerator : MonoBehaviour
         return view.gameObject.transform.position;
     }
 
-    public void CheckMark (Cell cell)
+    public void CleanUp()
     {
-        var view = CellObjects[cell];
-        var renderer = view.GetComponentInChildren<Renderer>();
-        renderer.material.color = Color.red;
+        Grid.CleanUp();
     }
 
+    public bool GridIsFull() => Grid.IsFull();
     private void GenerateVisualGrid()
     {
         foreach (var cell in Grid.GetAllCells())

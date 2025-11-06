@@ -33,7 +33,7 @@ public class HexonView : MonoBehaviour
     private void OnSold()
     {
         Hexon.Sold -= OnSold;
-        Destroy(gameObject);
+        Destroy(gameObject);             
     }
 
     private void OnDestroy()

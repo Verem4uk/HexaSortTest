@@ -1,23 +1,15 @@
-
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Model
 {
-    private Grid Grid;
-    private Cell NextCellOperation;    
-    private Controller Controller;
-
+    private Cell NextCellOperation;      
     private List<HexonStack> UsedStacks = new();
     private Queue<Cell> CellsForCheck = new();
 
-    public Model (Grid grid, Controller controller)
-    {
-        Grid = grid;
-        Controller = controller;
-    }
-
     public bool HasMoves => NextCellOperation != null;
+
+    public Action<int> StackedHexons;
 
     public void Place(HexonStack stack, Cell cell)
     {        
@@ -27,21 +19,22 @@ public class Model
     }
 
     public void NextMove()
-    {        
-        var neighbors = NextCellOperation.Neighbors;
-        if (neighbors.Count == 0)
+    {       
+        if (NextCellOperation.Stack == null || NextCellOperation.Stack.IsEmpty())
         {
             NextCellOperation = CellsForCheck.Count > 0 ? CellsForCheck.Dequeue() : null;
 
             if (NextCellOperation == null)
             {
                 SellStacks();
+                return;
             }
         }
 
         var counter = 0;
         var targetStack = NextCellOperation.Stack;        
         var color = targetStack.Peek().ColorType;
+        var neighbors = NextCellOperation.Neighbors;
 
         foreach (var neighbor in neighbors)
         {            
@@ -53,7 +46,7 @@ public class Model
             var neighborStack = neighbor.Stack;
             var buffer = new Stack<Hexon>();
 
-            while (neighborStack.Peek().ColorType == color)
+            while (!neighborStack.IsEmpty() && neighborStack.Peek().ColorType == color)
             {
                 var hexon = neighborStack.Pop();                
                 buffer.Push(hexon);
@@ -92,7 +85,7 @@ public class Model
         }
     }
 
-    public void SellStacks()
+    private void SellStacks()
     {
         foreach (var stack in UsedStacks)
         {
@@ -100,7 +93,11 @@ public class Model
             {
                 continue;
             }
-            stack.CheckAmount();
+            var count = stack.CheckAmount();
+            if(count > 0)
+            {
+                StackedHexons?.Invoke(count);
+            }
             if (!stack.IsEmpty())
             {
                 CellsForCheck.Enqueue(stack.Cell);

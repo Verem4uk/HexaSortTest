@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
@@ -10,16 +8,30 @@ public class Controller : MonoBehaviour
     [SerializeField]
     private HexonStackGeneratorView StackGenerator;
 
+    [SerializeField]
+    private Score Score;
+
+    [SerializeField]
+    private Messanger Messanger;
+
+    [SerializeField]
+    private Level[] Levels;
+
     private Model Model;
     private bool InputIsLocked;
+    private int CurrentLevelIndex;
 
     private void Start()
     {
         //Entry point
 
-        GridGenerator.Initialize(out var grid);
-        Model = new Model(grid, this);
-        StackGenerator.Initialize(this);        
+        GridGenerator.Initialize();
+        Model = new Model();
+        StackGenerator.Initialize(this);
+
+        Score.Initialize(Model);
+        Score.OnGoalReached += OnNextLevel;
+        Score.StartLevel(Levels[CurrentLevelIndex]);
     }
 
     public bool Place(HexonStack stack, Cell cell)
@@ -43,10 +55,31 @@ public class Controller : MonoBehaviour
             Model.NextMove();
         }
 
+        if(GridGenerator.GridIsFull())
+        {
+            Messanger.ShowMessage("YOU LOSE!");
+        }
+
         InputIsLocked = false;
     }
 
-    public void CheckMark(Cell cell) => GridGenerator.CheckMark(cell);
+    public void OnNextLevel()
+    {        
+        StackGenerator.CleanUpStacks();
+        GridGenerator.CleanUp();        
+
+        if(++CurrentLevelIndex < Levels.Length)
+        {            
+            Messanger.ShowMessage("Level "+ (CurrentLevelIndex + 1).ToString());
+            Score.StartLevel(Levels[CurrentLevelIndex]);
+            StackGenerator.Spawn();
+        }
+        else
+        {
+            Messanger.ShowMessage("YOU WIN!");
+        }        
+    }
+        
     public Vector3 GetPositionForMove(Cell cell) => GridGenerator.GetPositionByCell(cell);
     public Vector3 GetPositionForMove(HexonStack stack) => StackGenerator.GetPositionByStack(stack);
 }

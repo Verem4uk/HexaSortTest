@@ -47,6 +47,30 @@ public class Grid
             }
         }
     }
+   
+    public bool IsFull()
+    {        
+        foreach (var cell in Cells.Values)
+        {
+            if (!cell.IsOccupied)
+            {
+                return false;
+            }                
+        }
+
+        return true;
+    }
+
+    public void CleanUp()
+    {
+        foreach (var cell in Cells.Values)
+        {
+            if (cell.IsOccupied)
+            {
+                cell.Stack.Delete();
+            }
+        }
+    }
 
     public IEnumerable<Cell> GetAllCells() => Cells.Values;
 }
