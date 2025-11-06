@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class HexonStack
 {
+    private static int MaxStackAmount = 10;
     private Stack<Hexon> Stack;
     public Cell Cell { private set; get; }
 
@@ -31,14 +32,53 @@ public class HexonStack
     public void Push(Hexon hexon)
     {
         Stack.Push(hexon);
-        hexon.ChangeStack(this);
+        hexon.ChangeStack(this);     
+    }
+
+    public void CheckAmount()
+    {
+        if (Stack.Count < MaxStackAmount)
+        {
+            return;
+        }
+            
+        var topColor = Stack.Peek().ColorType;        
+        var buffer = new Stack<Hexon>();
+
+        while (Stack.Count > 0 && Stack.Peek().ColorType == topColor)
+        {
+            buffer.Push(Stack.Pop());
+        }
+
+        if (buffer.Count >= MaxStackAmount)
+        {            
+            while (buffer.Count > 0)
+            {
+                var hexon = buffer.Pop();
+                hexon.Sell(); 
+            }
+        }
+        else
+        {            
+            while (buffer.Count > 0)
+            {
+                Stack.Push(buffer.Pop());
+            }
+        }
+
+        IsEmpty();
     }
 
     public Hexon Pop() => Stack.Pop();
     public Hexon Peek() => Stack.Peek();
 
-    public bool CheckForEmpty()
+    public bool IsEmpty()
     {
+        if(Stack == null)
+        {
+            return true;
+        }
+
         if(Stack.Count == 0)
         {
             Cell.CleanUp();

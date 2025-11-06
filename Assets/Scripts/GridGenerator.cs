@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Burst.Intrinsics.Arm;
 
 public class GridGenerator : MonoBehaviour
 {
@@ -26,6 +27,13 @@ public class GridGenerator : MonoBehaviour
     {
         var view = CellObjects[cell];
         return view.gameObject.transform.position;
+    }
+
+    public void CheckMark (Cell cell)
+    {
+        var view = CellObjects[cell];
+        var renderer = view.GetComponentInChildren<Renderer>();
+        renderer.material.color = Color.red;
     }
 
     private void GenerateVisualGrid()

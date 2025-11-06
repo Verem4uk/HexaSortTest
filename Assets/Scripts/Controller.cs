@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
@@ -17,7 +18,7 @@ public class Controller : MonoBehaviour
         //Entry point
 
         GridGenerator.Initialize(out var grid);
-        Model = new Model(grid);
+        Model = new Model(grid, this);
         StackGenerator.Initialize(this);        
     }
 
@@ -36,21 +37,16 @@ public class Controller : MonoBehaviour
     public void NextMove()
     {
         InputIsLocked = true;
-        StartCoroutine(DelayCheck());
-    }
 
-    private IEnumerator DelayCheck()
-    {
-        float delay;
-
-        while ((delay = Model.CheckMoves()) > 0f)
+        while (Model.HasMoves)
         {
-            yield return new WaitForSeconds(delay);
+            Model.NextMove();
         }
 
         InputIsLocked = false;
     }
 
+    public void CheckMark(Cell cell) => GridGenerator.CheckMark(cell);
     public Vector3 GetPositionForMove(Cell cell) => GridGenerator.GetPositionByCell(cell);
     public Vector3 GetPositionForMove(HexonStack stack) => StackGenerator.GetPositionByStack(stack);
 }

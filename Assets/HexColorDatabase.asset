@@ -26,6 +26,6 @@ MonoBehaviour:
   - type: 5
     color: {r: 0, g: 0.9863577, b: 1, a: 0}
   - type: 6
-    color: {r: 0, g: 0, b: 0, a: 0}
+    color: {r: 1, g: 0.61228013, b: 0, a: 0}
   - type: 7
     color: {r: 1, g: 1, b: 1, a: 0}

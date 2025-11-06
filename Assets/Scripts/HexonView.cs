@@ -9,6 +9,7 @@ public class HexonView : MonoBehaviour
     {
         Hexon = hexon;
         Hexon.StackChanged += MoveTo;
+        Hexon.Sold += OnSold;
         Controller = controller;
     }
 
@@ -28,6 +29,13 @@ public class HexonView : MonoBehaviour
             yield return null;
         }
     }
+
+    private void OnSold()
+    {
+        Hexon.Sold -= OnSold;
+        Destroy(gameObject);
+    }
+
     private void OnDestroy()
     {
         Hexon.StackChanged -= MoveTo;

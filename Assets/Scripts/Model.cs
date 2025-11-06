@@ -5,41 +5,46 @@ using UnityEngine;
 public class Model
 {
     private Grid Grid;
-    private Cell LastCellOperation;
+    private Cell NextCellOperation;    
+    private Controller Controller;
+
+    private List<HexonStack> UsedStacks = new();
     private Queue<Cell> CellsForCheck = new();
 
-    public Model (Grid grid)
+    public Model (Grid grid, Controller controller)
     {
         Grid = grid;
+        Controller = controller;
     }
+
+    public bool HasMoves => NextCellOperation != null;
 
     public void Place(HexonStack stack, Cell cell)
     {        
         cell.PlaceStack(stack);
         stack.Place(cell);
-        LastCellOperation = cell;
+        NextCellOperation = cell;
     }
 
-    public int CheckMoves()
-    {
-        if(LastCellOperation == null)
-        {
-            Debug.Log("No moves");
-            return 0;
-        }
-        var neighbors = LastCellOperation.Neighbors;
+    public void NextMove()
+    {        
+        var neighbors = NextCellOperation.Neighbors;
         if (neighbors.Count == 0)
         {
-            Debug.Log("No moves");
-            return 0;
+            NextCellOperation = CellsForCheck.Count > 0 ? CellsForCheck.Dequeue() : null;
+
+            if (NextCellOperation == null)
+            {
+                SellStacks();
+            }
         }
 
         var counter = 0;
-        var targetStack = LastCellOperation.Stack;
+        var targetStack = NextCellOperation.Stack;        
         var color = targetStack.Peek().ColorType;
 
         foreach (var neighbor in neighbors)
-        {           
+        {            
             if (!neighbor.IsOccupied)
             {
                 continue;
@@ -48,11 +53,14 @@ public class Model
             var neighborStack = neighbor.Stack;
             var buffer = new Stack<Hexon>();
 
-            while (!neighborStack.CheckForEmpty() &&
-                neighborStack.Peek().ColorType == color)
+            while (neighborStack.Peek().ColorType == color)
             {
                 var hexon = neighborStack.Pop();                
                 buffer.Push(hexon);
+                if (neighborStack.IsEmpty())
+                {
+                    break;
+                }
             }
 
             if(buffer.Count == 0)
@@ -73,11 +81,34 @@ public class Model
                 CellsForCheck.Enqueue(neighbor);
             }
 
-            return counter;
+            UsedStacks.Add(targetStack);
         }
 
-        LastCellOperation = CellsForCheck.Count > 0 ? CellsForCheck.Dequeue() : null;
-        return 0;
+        NextCellOperation = CellsForCheck.Count > 0 ? CellsForCheck.Dequeue() : null;             
+
+        if(NextCellOperation == null)
+        {
+            SellStacks();
+        }
     }
 
+    public void SellStacks()
+    {
+        foreach (var stack in UsedStacks)
+        {
+            if(stack == null || stack.IsEmpty())
+            {
+                continue;
+            }
+            stack.CheckAmount();
+            if (!stack.IsEmpty())
+            {
+                CellsForCheck.Enqueue(stack.Cell);
+            }
+        }
+
+        UsedStacks.Clear();
+        NextCellOperation = CellsForCheck.Count > 0 ? CellsForCheck.Dequeue() : null;
+    }
 }
+
