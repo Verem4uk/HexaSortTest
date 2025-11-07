@@ -81,5 +81,5 @@ public class Controller : MonoBehaviour
     }
         
     public Vector3 GetPositionForMove(Cell cell) => GridGenerator.GetPositionByCell(cell);
-    public Vector3 GetPositionForMove(HexonStack stack) => StackGenerator.GetPositionByStack(stack);
+    public HexonStackView GetStackViewForMove(HexonStack stack) => StackGenerator.GetViewByStack(stack);
 }

@@ -22,13 +22,8 @@ public class Model
     {       
         if (NextCellOperation.Stack == null || NextCellOperation.Stack.IsEmpty())
         {
-            NextCellOperation = CellsForCheck.Count > 0 ? CellsForCheck.Dequeue() : null;
-
-            if (NextCellOperation == null)
-            {
-                SellStacks();
-                return;
-            }
+            SellStacks();
+            return;
         }
 
         var counter = 0;

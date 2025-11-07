@@ -21,7 +21,7 @@ public class HexonStackView : MonoBehaviour
     public void Initialize(HexonStack stack, Controller controller)
     {
         Stack = stack;
-        stack.Placed += OnPlaced;
+        stack.Placed += OnPlaced;        
         Controller = controller;
     }
 

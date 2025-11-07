@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -18,9 +19,7 @@ public class HexonStackGeneratorView : MonoBehaviour
     private ColorsDatabase colorDatabase;
     [SerializeField]
     private HexonView HexonView;
-    [SerializeField]
-    private float hexHeight = 1f;
-
+    
     [SerializeField]
     private HexonStackView StackHolder;
 
@@ -57,7 +56,7 @@ public class HexonStackGeneratorView : MonoBehaviour
             for (int j = 0; j < hexons.Length; j++)
             {
                 var hexon = hexons[j];
-                var hexonView = Instantiate(HexonView,stackHolder.transform.position + Vector3.up * (j * hexHeight), Quaternion.identity, stackHolder.transform);                
+                var hexonView = Instantiate(HexonView,stackHolder.transform.position + Vector3.up * (j * 0.3f), Quaternion.identity, stackHolder.transform);                
                 var renderer = hexonView.GetComponentInChildren<Renderer>();                
                 renderer.material.color = colorDatabase.GetColor(hexon.ColorType);
                 hexonView.Initialize(hexon, Controller);
@@ -65,19 +64,19 @@ public class HexonStackGeneratorView : MonoBehaviour
         }        
     }
 
-    public Vector3 GetPositionByStack(HexonStack stack)
-    {
-        var view = Stacks[stack];
-        var hexonsCount = stack.PeekAll().Length;
-        var cellPosition = Controller.GetPositionForMove(stack.Cell);
-        return cellPosition + Vector3.up * (hexonsCount * hexHeight);
-    }
+    public HexonStackView GetViewByStack(HexonStack stack) => Stacks[stack];    
 
     public void OnStackDepleted(HexonStack hexonStack)
-    {  
+    {
+        var view = Stacks[hexonStack];
         Stacks.Remove(hexonStack);
-        //var view = Stacks[hexonStack];
-        //Destroy(view.gameObject);
+        StartCoroutine(DelayDestroy(view, 0.3f));
+    }
+
+    private IEnumerator DelayDestroy(HexonStackView view, float duration)
+    {       
+        yield return new WaitForSeconds(duration);       
+        Destroy(view.gameObject);
     }
 
     public void CleanUpStacks()

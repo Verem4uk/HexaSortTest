@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Unity.Burst.Intrinsics.Arm;
 
 public class GridGenerator : MonoBehaviour
 {

@@ -54,6 +54,7 @@ public class Grid
         {
             if (!cell.IsOccupied)
             {
+                Debug.Log("Some is not occupied");
                 return false;
             }                
         }
