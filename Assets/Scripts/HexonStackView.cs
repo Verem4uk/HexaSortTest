@@ -12,6 +12,9 @@ public class HexonStackView : MonoBehaviour
     private Camera MainCamera;
 
     private Controller Controller;
+    private Vector2 LastTouchPosition;
+    private Vector2 ReleasePosition;
+    private bool HasReleasePosition;
 
     private void Start()
     {
@@ -45,8 +48,20 @@ public class HexonStackView : MonoBehaviour
     }
 
     private void Update()
-    {    
+    {
         Vector2 pointerPos = GetPointerScreenPosition();
+
+        if (GetPointerIsPressed())
+        {
+            LastTouchPosition = pointerPos;
+            HasReleasePosition = false;
+        }
+
+        if (GetPointerReleasedThisFrame())        {
+            
+            ReleasePosition = LastTouchPosition;
+            HasReleasePosition = true;
+        }
 
         if (GetPointerPressedThisFrame())
         {
@@ -63,20 +78,32 @@ public class HexonStackView : MonoBehaviour
             Vector3 target = GetMouseWorldPos(pointerPos) + Offset;
             transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * 15f);
 
-            if (GetPointerReleasedThisFrame() || !GetPointerIsPressed())
+            bool released = GetPointerReleasedThisFrame() || (!GetPointerIsPressed() && HasReleasePosition);
+
+            if (released)
             {
                 IsDragging = false;
                 var collider = GetComponent<BoxCollider>();
                 collider.enabled = false;
 
-                var targetCell = GetHoveredCell(pointerPos);
-                if (targetCell == null || targetCell.Cell.Type == Cell.CellType.Blocked || 
-                    !Controller.Place(Stack, targetCell.Cell))
+                var usePos = HasReleasePosition ? ReleasePosition : LastTouchPosition;
+
+                transform.position = GetMouseWorldPos(usePos) + Offset;
+
+                var targetCell = GetHoveredCell(usePos);
+                bool placed = false;
+
+                if (targetCell != null &&
+                    targetCell.Cell.Type != Cell.CellType.Blocked)
+                {
+                    placed = Controller.Place(Stack, targetCell.Cell);
+                }
+
+                if (!placed)
                 {
                     collider.enabled = true;
                     transform.position = StartPosition;
-                }                 
-                                 
+                }
             }
         }
     }

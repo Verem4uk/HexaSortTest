@@ -67,12 +67,14 @@ public class CellView : MonoBehaviour
     }
 
     public void HandleClick()
-    {
-        Debug.Log($"Clicked on cell {Cell}");
+    {        
         if (Controller.IsHummerMode())
         {
-            Cell.Stack.Delete();
-            Controller.DisableHummerMode();
+            if(Cell.IsOccupied)
+            {
+                Cell.Stack.Delete();
+                Controller.DisableHummerMode();
+            }            
         }        
     }
 
