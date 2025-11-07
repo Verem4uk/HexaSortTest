@@ -1,14 +1,18 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Collider))]
 public class CellView : MonoBehaviour
-{        
+{            
     public Cell Cell { private set; get; }
 
-    public void Initialize(Cell cell)
+    private Controller Controller;
+
+    public void Initialize(Cell cell, Controller controller)
     {
         Cell = cell;
+        Controller = controller;
     }      
 
     public static Vector2 GetPointerScreenPosition()
@@ -34,5 +38,34 @@ public class CellView : MonoBehaviour
         }
 
         return false;
-    }   
+    }
+
+    private void Update()
+    {
+        if (WasClicked() && IsPointerOverThisCell(this))
+        {
+            HandleClick();
+        }
+    }
+
+    private bool WasClicked()
+    {        
+        if (Mouse.current?.leftButton.wasPressedThisFrame == true)
+            return true;
+                
+        if (Touchscreen.current?.primaryTouch.press.wasPressedThisFrame == true)
+            return true;
+
+        return false;
+    }
+
+    public void HandleClick()
+    {
+        Debug.Log($"Clicked on cell {Cell}");
+        if (Controller.IsHummerMode())
+        {
+            Cell.Stack.Delete();
+            Controller.DisableHummerMode();
+        }        
+    }
 }

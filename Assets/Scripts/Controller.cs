@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
@@ -20,12 +21,13 @@ public class Controller : MonoBehaviour
     private Model Model;
     private bool InputIsLocked;
     private int CurrentLevelIndex;
-
+    private bool HummerMode;
+        
     private void Start()
     {
         //Entry point
 
-        GridGenerator.Initialize();
+        GridGenerator.Initialize(this);
         Model = new Model();
         StackGenerator.Initialize(this);
 
@@ -79,6 +81,10 @@ public class Controller : MonoBehaviour
             Messanger.ShowMessage("YOU WIN!");
         }        
     }
+
+    public bool IsHummerMode() => HummerMode;
+    public void EnableHummerMode() => HummerMode = true;
+    public void DisableHummerMode() => HummerMode = false;
         
     public Vector3 GetPositionForMove(Cell cell) => GridGenerator.GetPositionByCell(cell);
     public HexonStackView GetStackViewForMove(HexonStack stack) => StackGenerator.GetViewByStack(stack);

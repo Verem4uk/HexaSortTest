@@ -13,9 +13,11 @@ public class GridGenerator : MonoBehaviour
 
     private Grid Grid;
     private Dictionary<Cell, CellView> CellObjects = new();
+    private Controller Controller;
     
-    public void Initialize()
-    {        
+    public void Initialize(Controller controller)
+    {
+        Controller = controller;
         Grid = new Grid(radius);        
         GenerateVisualGrid();
         CenterGrid();
@@ -39,7 +41,7 @@ public class GridGenerator : MonoBehaviour
         {
             Vector3 position = AxialToWorld(cell.Q, cell.R);
             var hexagonePlate = Instantiate(hexPrefab, position, Quaternion.identity, transform);
-            hexagonePlate.Initialize(cell);
+            hexagonePlate.Initialize(cell, Controller);
             CellObjects[cell] = hexagonePlate;
         }
     }

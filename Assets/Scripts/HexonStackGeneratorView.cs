@@ -85,7 +85,10 @@ public class HexonStackGeneratorView : MonoBehaviour
         
         foreach (var stack in stacksCopy)
         {
-            stack.Delete();
+            if(stack.Cell == null)
+            {
+                stack.Delete();
+            }            
         }
 
         Stacks.Clear();
