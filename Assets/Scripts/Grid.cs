@@ -72,6 +72,14 @@ public class Grid
             }
         }
     }
+        
+    public void BlockRandomCell()
+    {                
+        var allCells = new List<Cell>(Cells.Values);
+        int randomIndex = Random.Range(0, allCells.Count);
+        var randomCell = allCells[randomIndex];
+        randomCell.Lock();
+    }
 
     public IEnumerable<Cell> GetAllCells() => Cells.Values;
 }

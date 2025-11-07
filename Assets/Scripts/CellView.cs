@@ -12,6 +12,7 @@ public class CellView : MonoBehaviour
     public void Initialize(Cell cell, Controller controller)
     {
         Cell = cell;
+        Cell.Unlocked += OnUnlock;
         Controller = controller;
     }      
 
@@ -59,6 +60,12 @@ public class CellView : MonoBehaviour
         return false;
     }
 
+    private void OnUnlock()
+    {
+        var renderer = GetComponentInChildren<Renderer>();
+        renderer.material.color = Color.gray;        
+    }
+
     public void HandleClick()
     {
         Debug.Log($"Clicked on cell {Cell}");
@@ -67,5 +74,10 @@ public class CellView : MonoBehaviour
             Cell.Stack.Delete();
             Controller.DisableHummerMode();
         }        
+    }
+
+    private void OnDestroy()
+    {
+        Cell.Unlocked -= OnUnlock;
     }
 }

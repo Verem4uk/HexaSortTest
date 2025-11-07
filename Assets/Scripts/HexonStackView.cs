@@ -70,7 +70,8 @@ public class HexonStackView : MonoBehaviour
                 collider.enabled = false;
 
                 var targetCell = GetHoveredCell(pointerPos);
-                if (targetCell == null || !Controller.Place(Stack, targetCell.Cell))
+                if (targetCell == null || targetCell.Cell.Type == Cell.CellType.Blocked || 
+                    !Controller.Place(Stack, targetCell.Cell))
                 {
                     collider.enabled = true;
                     transform.position = _startPosition;

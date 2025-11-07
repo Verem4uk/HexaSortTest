@@ -9,6 +9,10 @@ public class Cell
     public bool IsOccupied => Stack != null;
     public HexonStack Stack { get; private set; }
 
+    public CellType Type { get; private set; } = CellType.Default;
+
+    public Action Unlocked;
+
     public Cell(int q, int r)
     {
         Q = q;
@@ -34,8 +38,25 @@ public class Cell
         }            
     }
 
+    public void Lock()
+    {
+        Type = CellType.Blocked;
+    }
+
+    public void Unlock()
+    {
+        Type = CellType.Default;
+        Unlocked?.Invoke();
+    }
+
     public override string ToString()
     {
         return $"HexCell ({Q},{R}) Neigh={Neighbors.Count}";
+    }
+
+    public enum CellType
+    {
+        Default,
+        Blocked
     }
 }

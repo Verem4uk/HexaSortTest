@@ -18,7 +18,8 @@ public class GridGenerator : MonoBehaviour
     public void Initialize(Controller controller)
     {
         Controller = controller;
-        Grid = new Grid(radius);        
+        Grid = new Grid(radius);
+        Grid.BlockRandomCell();
         GenerateVisualGrid();
         CenterGrid();
     }   
@@ -32,9 +33,11 @@ public class GridGenerator : MonoBehaviour
     public void CleanUp()
     {
         Grid.CleanUp();
+        Grid.BlockRandomCell();
     }
-
+        
     public bool GridIsFull() => Grid.IsFull();
+    
     private void GenerateVisualGrid()
     {
         foreach (var cell in Grid.GetAllCells())
@@ -43,6 +46,12 @@ public class GridGenerator : MonoBehaviour
             var hexagonePlate = Instantiate(hexPrefab, position, Quaternion.identity, transform);
             hexagonePlate.Initialize(cell, Controller);
             CellObjects[cell] = hexagonePlate;
+
+            if(cell.Type == Cell.CellType.Blocked)
+            {
+                var renderer = hexagonePlate.GetComponentInChildren<Renderer>();
+                renderer.material.color = Color.red;
+            }
         }
     }
 

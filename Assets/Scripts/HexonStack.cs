@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 public class HexonStack
 {
@@ -59,6 +60,8 @@ public class HexonStack
                 var hexon = buffer.Pop();
                 hexon.Sell(); 
             }
+
+            UnlockNeibors();
         }
         else
         {            
@@ -66,10 +69,23 @@ public class HexonStack
             {
                 Stack.Push(buffer.Pop());
             }
-        }
+        }        
 
         IsEmpty();
         return count;
+    }
+
+    private void UnlockNeibors()
+    {
+        var neighbors = Cell.Neighbors;
+
+        foreach (var neighbor in neighbors)
+        {
+            if (neighbor.Type == Cell.CellType.Blocked)
+            {
+                neighbor.Unlock();
+            }
+        }
     }
 
     public Hexon Pop() => Stack.Pop();

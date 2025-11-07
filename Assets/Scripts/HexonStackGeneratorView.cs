@@ -69,6 +69,10 @@ public class HexonStackGeneratorView : MonoBehaviour
     public void OnStackDepleted(HexonStack hexonStack)
     {
         var view = Stacks[hexonStack];
+        if(view == null)
+        {
+            return;
+        }
         Stacks.Remove(hexonStack);
         StartCoroutine(DelayDestroy(view, 0.3f));
     }
