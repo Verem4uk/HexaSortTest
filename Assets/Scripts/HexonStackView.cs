@@ -6,16 +6,16 @@ using UnityEngine.InputSystem;
 public class HexonStackView : MonoBehaviour
 {
     private HexonStack Stack;    
-    private bool _isDragging;
-    private Vector3 _offset;
-    private Vector3 _startPosition;
-    private Camera _mainCamera;
+    private bool IsDragging;
+    private Vector3 Offset;
+    private Vector3 StartPosition;
+    private Camera MainCamera;
 
     private Controller Controller;
 
     private void Start()
     {
-        _mainCamera = Camera.main;
+        MainCamera = Camera.main;
     }
 
     public void Initialize(HexonStack stack, Controller controller)
@@ -52,20 +52,20 @@ public class HexonStackView : MonoBehaviour
         {
             if (TryPickUnderCursor(pointerPos, out var hit) && hit.collider.gameObject == gameObject)
             {
-                _isDragging = true;
-                _startPosition = transform.position;
-                _offset = transform.position - GetMouseWorldPos(pointerPos);
+                IsDragging = true;
+                StartPosition = transform.position;
+                Offset = transform.position - GetMouseWorldPos(pointerPos);
             }
         }
 
-        if (_isDragging)
+        if (IsDragging)
         {
-            Vector3 target = GetMouseWorldPos(pointerPos) + _offset;
+            Vector3 target = GetMouseWorldPos(pointerPos) + Offset;
             transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * 15f);
 
             if (GetPointerReleasedThisFrame() || !GetPointerIsPressed())
             {
-                _isDragging = false;
+                IsDragging = false;
                 var collider = GetComponent<BoxCollider>();
                 collider.enabled = false;
 
@@ -74,7 +74,7 @@ public class HexonStackView : MonoBehaviour
                     !Controller.Place(Stack, targetCell.Cell))
                 {
                     collider.enabled = true;
-                    transform.position = _startPosition;
+                    transform.position = StartPosition;
                 }                 
                                  
             }
@@ -125,7 +125,7 @@ public class HexonStackView : MonoBehaviour
 
     private Vector3 GetMouseWorldPos(Vector2 screenPos)
     {
-        var ray = _mainCamera.ScreenPointToRay(screenPos);
+        var ray = MainCamera.ScreenPointToRay(screenPos);
         Plane plane = new Plane(Vector3.up, Vector3.zero);
         plane.Raycast(ray, out float enter);
         return ray.GetPoint(enter);
@@ -133,13 +133,13 @@ public class HexonStackView : MonoBehaviour
 
     private bool TryPickUnderCursor(Vector2 screenPos, out RaycastHit hit)
     {
-        var ray = _mainCamera.ScreenPointToRay(screenPos);
+        var ray = MainCamera.ScreenPointToRay(screenPos);
         return Physics.Raycast(ray, out hit);
     }
 
     private CellView GetHoveredCell(Vector2 screenPos)
     {        
-        var ray = _mainCamera.ScreenPointToRay(screenPos);
+        var ray = MainCamera.ScreenPointToRay(screenPos);
         if (Physics.Raycast(ray, out var hit))
         {            
             return hit.collider.GetComponent<CellView>();

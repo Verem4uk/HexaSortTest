@@ -743,11 +743,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f31132899f73140abd5122fac5e2fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stacksCount: 3
-  minStackHeight: 2
-  maxStackHeight: 5
-  twoColorChance: 0.5
-  colorDatabase: {fileID: 11400000, guid: 725083fcd2ce75548af18146c088e965, type: 2}
+  StacksCount: 3
+  MinStackHeight: 2
+  MaxStackHeight: 5
+  TwoColorChance: 0.5
+  ColorDatabase: {fileID: 11400000, guid: 725083fcd2ce75548af18146c088e965, type: 2}
   HexonView: {fileID: 5764102552404662096, guid: ac186f39cf19ae2469c82f6ba0f0aefa, type: 3}
   StackHolder: {fileID: 1313696459282910162, guid: e1d01322dee40a34ebe8473110780f82, type: 3}
   StackPositions:

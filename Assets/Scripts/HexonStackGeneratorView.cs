@@ -7,16 +7,16 @@ using UnityEngine;
 public class HexonStackGeneratorView : MonoBehaviour
 {    
     [SerializeField, Range(1, 10)] 
-    private int stacksCount = 3;
+    private int StacksCount = 3;
     [SerializeField, Range(1, 10)] 
-    private int minStackHeight = 1;
+    private int MinStackHeight = 2;
     [SerializeField, Range(1, 10)] 
-    private int maxStackHeight = 5;
+    private int MaxStackHeight = 5;
     [SerializeField, Range(0f, 1f)] 
-    private float twoColorChance = 0.5f;
+    private float TwoColorChance = 0.5f;
 
     [SerializeField]
-    private ColorsDatabase colorDatabase;
+    private ColorsDatabase ColorDatabase;
     [SerializeField]
     private HexonView HexonView;
     
@@ -34,7 +34,7 @@ public class HexonStackGeneratorView : MonoBehaviour
     public void Initialize(Controller controller)
     {
         Controller = controller;
-        Generator = new HexonStackGenerator(stacksCount, minStackHeight, maxStackHeight, twoColorChance);
+        Generator = new HexonStackGenerator(StacksCount, MinStackHeight, MaxStackHeight, TwoColorChance);
         Generator.AllStacksWereUsed += Spawn;
         Spawn();
     }
@@ -58,7 +58,7 @@ public class HexonStackGeneratorView : MonoBehaviour
                 var hexon = hexons[j];
                 var hexonView = Instantiate(HexonView,stackHolder.transform.position + Vector3.up * (j * 0.3f), Quaternion.identity, stackHolder.transform);                
                 var renderer = hexonView.GetComponentInChildren<Renderer>();                
-                renderer.material.color = colorDatabase.GetColor(hexon.ColorType);
+                renderer.material.color = ColorDatabase.GetColor(hexon.ColorType);
                 hexonView.Initialize(hexon, Controller);
             }
         }        
@@ -68,11 +68,11 @@ public class HexonStackGeneratorView : MonoBehaviour
 
     public void OnStackDepleted(HexonStack hexonStack)
     {
-        var view = Stacks[hexonStack];
-        if(view == null)
+        if (!Stacks.ContainsKey(hexonStack))
         {
             return;
         }
+        var view = Stacks[hexonStack];        
         Stacks.Remove(hexonStack);
         StartCoroutine(DelayDestroy(view, 0.3f));
     }

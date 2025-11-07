@@ -54,6 +54,7 @@ public class HexonView : MonoBehaviour
             yield return null;
         }
 
+        gameObject.SetActive(false);
         Destroy(gameObject);
     }
 

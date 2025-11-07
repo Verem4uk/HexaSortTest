@@ -74,10 +74,9 @@ public class HexonStackGenerator
     {
         stack.Placed -= OnStackUsed;
         SpawnedStacks.Remove(stack);
-        UnityEngine.Debug.Log("On Stack Used");
+        
         if (SpawnedStacks.Count == 0)
-        {
-            UnityEngine.Debug.Log("AllStacksWereUsed");
+        {            
             AllStacksWereUsed?.Invoke();
         }
     }
